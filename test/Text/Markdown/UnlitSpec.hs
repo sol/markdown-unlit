@@ -29,17 +29,35 @@ spec = do
     it "prints a usage message" $ do
       withProgName "foo" $ do
         (r, Left (ExitFailure 1)) <- hCapture [stderr] (try $ run [])
-        r `shouldBe` "usage: foo -h label infile outfile\n"
+        r `shouldBe` "usage: foo [selector] -h label infile outfile\n"
 
-    it "unlits code marked with .literate and .haskell by default" $ do
+    it "unlits code marked with .haskell by default" $ do
       withTempFile $ \infile -> withTempFile $ \outfile -> do
         writeFile infile . build $ do
-          "~~~ {.haskell .literate}"
+          "~~~ {.haskell}"
           "some code"
 
           "~~~"
-        run ["-h", "foo", infile, outfile]
+          "~~~ {.not-haskell}"
+          "some other code"
+
+          "~~~"
+        run ["-h", infile, infile, outfile]
         readFile outfile `shouldReturn` "some code\n"
+
+    it "can be customized" $ do
+      withTempFile $ \infile -> withTempFile $ \outfile -> do
+        writeFile infile . build $ do
+          "~~~ {.foo}"
+          "some code"
+
+          "~~~"
+          "~~~ {.bar}"
+          "some other code"
+
+          "~~~"
+        run ["bar", "-h", infile, infile, outfile]
+        readFile outfile `shouldReturn` "some other code\n"
 
   describe "parseSelector" $ do
     it "parses + as :&:" $ do

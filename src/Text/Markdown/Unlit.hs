@@ -12,6 +12,7 @@ module Text.Markdown.Unlit (
 ) where
 
 import           Control.Applicative
+import           Data.Maybe
 import           Data.List
 import           Data.Char
 import           Data.String
@@ -21,21 +22,26 @@ import           System.Environment
 
 -- | Program entry point.
 run :: [String] -> IO ()
-run args = case args of
+run args =
   -- GHC calls unlit like so:
   --
-  -- > unlit -h label Foo.lhs /tmp/somefile
+  -- > unlit [args] -h label Foo.lhs /tmp/somefile
+  --
+  -- [args] are custom arguments provided with -optL
   --
   -- The label is meant to be used in line pragmas, like so:
   --
   -- #line 1 "label"
   --
-  ["-h", _, infile, outfile] ->
-    fmap (unlit $ Class "haskell" :&: Class "literate") (readFile infile) >>= writeFile outfile
-  _ -> do
-    name <- getProgName
-    hPutStrLn stderr ("usage: " ++ name ++ " -h label infile outfile")
-    exitFailure
+  case break (== "-h") args of
+    (xs, ["-h", _, infile, outfile]) ->
+      fmap (unlit $ mkSelector xs) (readFile infile) >>= writeFile outfile
+    _ -> do
+      name <- getProgName
+      hPutStrLn stderr ("usage: " ++ name ++ " [selector] -h label infile outfile")
+      exitFailure
+    where
+      mkSelector = fromMaybe (Class "haskell") . parseSelector . unwords
 
 unlit :: Selector -> String -> String
 unlit selector = unlines . concatMap codeBlockContent . filter (toP selector . codeBlockClasses) . parse
