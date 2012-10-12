@@ -4,14 +4,43 @@ module Text.Markdown.UnlitSpec (main, spec) where
 import           Test.Hspec
 import           Test.QuickCheck
 import           Data.String.Builder
+import           System.Environment
+import           Control.Exception
+import           System.Exit
+import           System.IO.Silently
+import           System.IO
+import           System.Directory
+import qualified Control.Exception as E
 
 import           Text.Markdown.Unlit
 
 main :: IO ()
 main = hspec spec
 
+withTempFile :: (FilePath -> IO ()) -> IO ()
+withTempFile action = do
+  (f, h) <- openTempFile "." "hspec-tmp"
+  hClose h
+  action f `E.finally` removeFile f
+
 spec :: Spec
 spec = do
+  describe "run" $ do
+    it "prints a usage message" $ do
+      withProgName "foo" $ do
+        (r, Left (ExitFailure 1)) <- hCapture [stderr] (try $ run [])
+        r `shouldBe` "usage: foo -h label infile outfile\n"
+
+    it "unlits code marked with .literate and .haskell by default" $ do
+      withTempFile $ \infile -> withTempFile $ \outfile -> do
+        writeFile infile . build $ do
+          "~~~ {.haskell .literate}"
+          "some code"
+
+          "~~~"
+        run ["-h", "foo", infile, outfile]
+        readFile outfile `shouldReturn` "some code\n"
+
   describe "parseSelector" $ do
     it "parses + as :&:" $ do
       parseSelector "foo+bar+baz" `shouldBe` Just ("foo" :&: "bar" :&: "baz")

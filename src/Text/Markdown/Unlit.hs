@@ -1,6 +1,7 @@
 {-# LANGUAGE CPP #-}
 module Text.Markdown.Unlit (
-  unlit
+  run
+, unlit
 , Selector (..)
 , parseSelector
 , CodeBlock (..)
@@ -10,10 +11,31 @@ module Text.Markdown.Unlit (
 #endif
 ) where
 
-import Control.Applicative
-import Data.List
-import Data.Char
-import Data.String
+import           Control.Applicative
+import           Data.List
+import           Data.Char
+import           Data.String
+import           System.IO
+import           System.Exit
+import           System.Environment
+
+-- | Program entry point.
+run :: [String] -> IO ()
+run args = case args of
+  -- GHC calls unlit like so:
+  --
+  -- > unlit -h label Foo.lhs /tmp/somefile
+  --
+  -- The label is meant to be used in line pragmas, like so:
+  --
+  -- #line 1 "label"
+  --
+  ["-h", _, infile, outfile] ->
+    fmap (unlit $ Class "haskell" :&: Class "literate") (readFile infile) >>= writeFile outfile
+  _ -> do
+    name <- getProgName
+    hPutStrLn stderr ("usage: " ++ name ++ " -h label infile outfile")
+    exitFailure
 
 unlit :: Selector -> String -> String
 unlit selector = unlines . concatMap codeBlockContent . filter (toP selector . codeBlockClasses) . parse
