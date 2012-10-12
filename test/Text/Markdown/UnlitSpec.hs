@@ -36,7 +36,14 @@ spec = do
 
     it "attaches classes to code blocks" $ do
       parse . build $ do
-        "~~~ {haskell literate}"
+        "~~~ {.haskell .literate}"
         "some code"
         "~~~"
       `shouldBe` [CodeBlock ["haskell", "literate"] ["some code"]]
+
+  describe "parseClasses" $ do
+    it "drops a leading dot" $ do
+      parseClasses "~~~ {.foo .bar}" `shouldBe` ["foo", "bar"]
+
+    it "treats dots as whitespace" $ do
+      parseClasses "~~~ {foo.bar. ..}" `shouldBe` ["foo", "bar"]

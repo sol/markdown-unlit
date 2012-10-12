@@ -23,8 +23,14 @@ parse = go . lines
 
 parseClasses :: String -> [String]
 parseClasses xs = case dropWhile isSpace . dropWhile (== '~') $ xs of
-  '{':ys -> words . takeWhile (/= '}') $ ys
+  '{':ys -> words . replace '.' ' ' . takeWhile (/= '}') $ ys
   _      -> []
 
 isFence :: String -> Bool
 isFence = isPrefixOf "~~~"
+
+replace :: Char -> Char -> String -> String
+replace x sub = map f
+  where
+    f y | x == y    = sub
+        | otherwise = y
