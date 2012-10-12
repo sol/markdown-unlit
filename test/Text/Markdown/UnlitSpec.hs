@@ -42,22 +42,27 @@ spec = do
           "some other code"
 
           "~~~"
-        run ["-h", infile, infile, outfile]
-        readFile outfile `shouldReturn` "some code\n"
+        run ["-h", "Foo.lhs", infile, outfile]
+        readFile outfile `shouldReturn` (build $ do
+          "#line 2 \"Foo.lhs\""
+          "some code"
+          )
 
     it "can be customized" $ do
       withTempFile $ \infile -> withTempFile $ \outfile -> do
         writeFile infile . build $ do
           "~~~ {.foo}"
           "some code"
-
+          ""
           "~~~"
           "~~~ {.bar}"
           "some other code"
-
           "~~~"
-        run ["bar", "-h", infile, infile, outfile]
-        readFile outfile `shouldReturn` "some other code\n"
+        run ["bar", "-h", "Foo.lhs", infile, outfile]
+        readFile outfile `shouldReturn` (build $ do
+          "#line 6 \"Foo.lhs\""
+          "some other code"
+          )
 
   describe "parseSelector" $ do
     it "parses + as :&:" $ do
@@ -74,37 +79,48 @@ spec = do
 
   describe "unlit" $ do
     it "can be used to unlit everything with a specified class" $ do
-      unlit "foo" . build $ do
+      unlit "Foo.lhs" "foo" . build $ do
         "~~~ {.foo}"
         "foo"
         "~~~"
         "~~~ {.bar}"
         "bar"
         "~~~"
-      `shouldBe` "foo\n"
+      `shouldBe` (build $ do
+        "#line 2 \"Foo.lhs\""
+        "foo"
+        )
 
     it "can handle :&:" $ do
-      unlit ("foo" :&: "bar") . build $ do
+      unlit "Foo.lhs" ("foo" :&: "bar") . build $ do
         "~~~ {.foo}"
         "some code"
         "~~~"
         "~~~ {.foo .bar}"
         "some other code"
         "~~~"
-      `shouldBe` "some other code\n"
+      `shouldBe` (build $ do
+        "#line 5 \"Foo.lhs\""
+        "some other code"
+        )
 
     it "can handle :|:" $ do
-      unlit ("foo" :|: "bar") . build $ do
+      unlit "Foo.lhs" ("foo" :|: "bar") . build $ do
         "~~~ {.foo}"
         "foo"
         "~~~"
         "~~~ {.bar}"
         "bar"
         "~~~"
-      `shouldBe` "foo\nbar\n"
+      `shouldBe` (build $ do
+        "#line 2 \"Foo.lhs\""
+        "foo"
+        "#line 5 \"Foo.lhs\""
+        "bar"
+        )
 
     it "can handle a combination of :&: and :|:" $ do
-      unlit ("foo" :&: "bar" :|: "foo" :&: "baz") . build $ do
+      unlit "Foo.lhs" ("foo" :&: "bar" :|: "foo" :&: "baz") . build $ do
         "~~~ {.foo .bar}"
         "one"
         "~~~"
@@ -114,7 +130,12 @@ spec = do
         "~~~ {.bar .baz}"
         "two"
         "~~~"
-      `shouldBe` "one\ntwo\n"
+      `shouldBe` (build $ do
+        "#line 2 \"Foo.lhs\""
+        "one"
+        "#line 5 \"Foo.lhs\""
+        "two"
+        )
 
   describe "parse" $ do
     it "yields an empty list on empty input" $ do
@@ -139,11 +160,22 @@ spec = do
       `shouldBe` [[]]
 
     it "attaches classes to code blocks" $ do
-      parse . build $ do
+      map codeBlockClasses . parse . build $ do
         "~~~ {.haskell .literate}"
         "some code"
         "~~~"
-      `shouldBe` [CodeBlock ["haskell", "literate"] ["some code"]]
+      `shouldBe` [["haskell", "literate"]]
+
+    it "attaches source locations to code blocks" $ do
+      map codeBlockStartLine . parse . build $ do
+        "some text"
+        ""
+        "~~~"
+        "some"
+        "code"
+        "~~~"
+        "some other text"
+      `shouldBe` [4]
 
   describe "parseClasses" $ do
     it "drops a leading dot" $ do

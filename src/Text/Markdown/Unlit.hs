@@ -34,8 +34,8 @@ run args =
   -- #line 1 "label"
   --
   case break (== "-h") args of
-    (xs, ["-h", _, infile, outfile]) ->
-      fmap (unlit $ mkSelector xs) (readFile infile) >>= writeFile outfile
+    (xs, ["-h", fileName, infile, outfile]) ->
+      fmap (unlit fileName $ mkSelector xs) (readFile infile) >>= writeFile outfile
     _ -> do
       name <- getProgName
       hPutStrLn stderr ("usage: " ++ name ++ " [selector] -h label infile outfile")
@@ -43,9 +43,12 @@ run args =
     where
       mkSelector = fromMaybe (Class "haskell") . parseSelector . unwords
 
-unlit :: Selector -> String -> String
-unlit selector = unlines . concatMap codeBlockContent . filter (toP selector . codeBlockClasses) . parse
+unlit :: FilePath -> Selector -> String -> String
+unlit fileName selector = unlines . concatMap formatCB . filter (toP selector . codeBlockClasses) . parse
   where
+    formatCB :: CodeBlock -> [String]
+    formatCB cb = ("#line " ++ show (codeBlockStartLine cb) ++ " " ++ show fileName) : codeBlockContent cb
+
     toP :: Selector -> [String] -> Bool
     toP = go
       where
@@ -82,30 +85,34 @@ instance IsString Selector where
   fromString = Class
 
 data CodeBlock = CodeBlock {
-  codeBlockClasses :: [String]
-, codeBlockContent :: [String]
+  codeBlockClasses   :: [String]
+, codeBlockContent   :: [String]
+, codeBlockStartLine :: Int
 } deriving (Eq, Show)
 
+type Line = (Int, String)
+
 parse :: String -> [CodeBlock]
-parse = go . lines
+parse = go . zip [2..] . lines
   where
-    go :: [String] -> [CodeBlock]
+    go :: [Line] -> [CodeBlock]
     go xs = case break isFence xs of
       (_, [])   -> []
       (_, y:ys) -> case takeCB y ys of
         (cb, rest) -> cb : go rest
 
-    takeCB :: String -> [String] -> (CodeBlock, [String])
-    takeCB fence xs = case break isFence xs of
-      (cb, rest) -> (CodeBlock (parseClasses fence) cb, drop 1 rest)
+    takeCB :: Line -> [Line] -> (CodeBlock, [Line])
+    takeCB (n, fence) xs = case break isFence xs of
+      (cb, rest) -> (CodeBlock (parseClasses fence) (map snd cb) n, drop 1 rest)
+
+    isFence :: Line -> Bool
+    isFence = isPrefixOf "~~~" . snd
 
 parseClasses :: String -> [String]
 parseClasses xs = case dropWhile isSpace . dropWhile (== '~') $ xs of
   '{':ys -> words . replace '.' ' ' . takeWhile (/= '}') $ ys
   _      -> []
 
-isFence :: String -> Bool
-isFence = isPrefixOf "~~~"
 
 replace :: Char -> Char -> String -> String
 replace x sub = map f
