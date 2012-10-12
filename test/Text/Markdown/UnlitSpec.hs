@@ -17,19 +17,26 @@ spec = do
       parse "" `shouldBe` []
 
     it "parses a code blocks" $ do
-      parse . build $ do
+      map codeBlockContent . parse . build $ do
         "some text"
         "~~~"
         "some"
         "code"
         "~~~"
         "some other text"
-      `shouldBe` [CodeBlock ["some", "code"]]
+      `shouldBe` [["some", "code"]]
 
     it "parses an empty code block" $ do
-      parse . build $ do
+      map codeBlockContent . parse . build $ do
         "some text"
         "~~~"
         "~~~"
         "some other text"
-      `shouldBe` [CodeBlock []]
+      `shouldBe` [[]]
+
+    it "attaches classes to code blocks" $ do
+      parse . build $ do
+        "~~~ {haskell literate}"
+        "some code"
+        "~~~"
+      `shouldBe` [CodeBlock ["haskell", "literate"] ["some code"]]

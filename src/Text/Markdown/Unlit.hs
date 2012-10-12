@@ -1,9 +1,12 @@
 module Text.Markdown.Unlit where
 
 import Data.List
+import Data.Char
 
-data CodeBlock = CodeBlock [String]
-  deriving (Eq, Show)
+data CodeBlock = CodeBlock {
+  codeBlockClasses :: [String]
+, codeBlockContent :: [String]
+} deriving (Eq, Show)
 
 parse :: String -> [CodeBlock]
 parse = go . lines
@@ -11,12 +14,17 @@ parse = go . lines
     go :: [String] -> [CodeBlock]
     go xs = case break isFence xs of
       (_, [])   -> []
-      (_, _:ys) -> case takeCB ys of
+      (_, y:ys) -> case takeCB y ys of
         (cb, rest) -> cb : go rest
 
-    takeCB :: [String] -> (CodeBlock, [String])
-    takeCB xs = case break isFence xs of
-      (cb, rest) -> (CodeBlock cb, drop 1 rest)
+    takeCB :: String -> [String] -> (CodeBlock, [String])
+    takeCB fence xs = case break isFence xs of
+      (cb, rest) -> (CodeBlock (parseClasses fence) cb, drop 1 rest)
 
-    isFence :: String -> Bool
-    isFence = isPrefixOf "~~~"
+parseClasses :: String -> [String]
+parseClasses xs = case dropWhile isSpace . dropWhile (== '~') $ xs of
+  '{':ys -> words . takeWhile (/= '}') $ ys
+  _      -> []
+
+isFence :: String -> Bool
+isFence = isPrefixOf "~~~"
