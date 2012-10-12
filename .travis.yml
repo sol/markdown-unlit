@@ -1,1 +1,5 @@
 language: haskell
+
+script:
+  cabal test
+  cd example && cabal configure --enable-tests && cabal build && cabal test
