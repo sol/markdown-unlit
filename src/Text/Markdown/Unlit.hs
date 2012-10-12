@@ -35,8 +35,10 @@ data Selector
   | Selector :|: Selector
   deriving (Eq, Show)
 
-parseSelector :: String -> Selector
-parseSelector = foldr1 (:|:) . map parseAnds . words
+parseSelector :: String -> Maybe Selector
+parseSelector input = case words input of
+  [] -> Nothing
+  xs -> (Just . foldr1 (:|:) . map parseAnds) xs
   where
     parseAnds = foldr1 (:&:) . map Class . split (== '+')
 

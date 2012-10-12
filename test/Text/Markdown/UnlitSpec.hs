@@ -2,6 +2,7 @@
 module Text.Markdown.UnlitSpec (main, spec) where
 
 import           Test.Hspec
+import           Test.QuickCheck
 import           Data.String.Builder
 
 import           Text.Markdown.Unlit
@@ -13,13 +14,16 @@ spec :: Spec
 spec = do
   describe "parseSelector" $ do
     it "parses + as :&:" $ do
-      parseSelector "foo+bar+baz" `shouldBe` ("foo" :&: "bar" :&: "baz")
+      parseSelector "foo+bar+baz" `shouldBe` Just ("foo" :&: "bar" :&: "baz")
 
     it "parses whitespace as :|:" $ do
-      parseSelector "foo bar baz" `shouldBe` ("foo" :|: "bar" :|: "baz")
+      parseSelector "foo bar baz" `shouldBe` Just ("foo" :|: "bar" :|: "baz")
 
     it "can handle a combination of :&: and :|:" $ do
-      parseSelector "foo+bar baz+bar" `shouldBe` ("foo" :&: "bar" :|: "baz" :&: "bar")
+      parseSelector "foo+bar baz+bar" `shouldBe` Just ("foo" :&: "bar" :|: "baz" :&: "bar")
+
+    it "is total" $ do
+      property $ \xs -> parseSelector xs `seq` True
 
   describe "unlit" $ do
     it "can be used to unlit everything with a specified class" $ do
