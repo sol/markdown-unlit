@@ -1,7 +1,13 @@
 module Text.Markdown.Unlit where
 
+import Control.Applicative
 import Data.List
 import Data.Char
+
+unlit :: String -> String
+unlit = unlines . concatMap codeBlockContent . filter (p . codeBlockClasses) . parse
+  where
+    p = (&&) <$> elem "literate" <*> elem "haskell"
 
 data CodeBlock = CodeBlock {
   codeBlockClasses :: [String]

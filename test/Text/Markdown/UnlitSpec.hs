@@ -11,6 +11,16 @@ main = hspec spec
 
 spec :: Spec
 spec = do
+  describe "unlit" $ do
+    it "unlits everything with class .haskell and .literate" $ do
+      unlit . build $ do
+        "~~~ {.haskell .literate}"
+        "some code"
+        "~~~"
+        "~~~ {.haskell}"
+        "some other code"
+        "~~~"
+      `shouldBe` "some code\n"
 
   describe "parse" $ do
     it "yields an empty list on empty input" $ do
