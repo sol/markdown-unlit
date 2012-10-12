@@ -1,4 +1,12 @@
-module Text.Markdown.Unlit where
+{-# LANGUAGE CPP #-}
+module Text.Markdown.Unlit (
+  unlit
+, CodeBlock (..)
+, parse
+#ifdef TEST
+, parseClasses
+#endif
+) where
 
 import Control.Applicative
 import Data.List

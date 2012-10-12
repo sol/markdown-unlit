@@ -41,12 +41,13 @@ test-suite spec
       exitcode-stdio-1.0
   ghc-options:
       -Wall -Werror
+  cpp-options:
+      -DTEST
   hs-source-dirs:
       src, test
   main-is:
       Spec.hs
   build-depends:
       base
-    , markdown-unlit
     , stringbuilder
     , hspec >= 1.3
