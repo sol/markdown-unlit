@@ -23,7 +23,7 @@ library
   exposed-modules:
       Text.Markdown.Unlit
   build-depends:
-      base
+      base < 5
 
 executable markdown-unlit
   ghc-options:
