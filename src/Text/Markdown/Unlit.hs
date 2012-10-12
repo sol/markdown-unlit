@@ -1,6 +1,8 @@
 {-# LANGUAGE CPP #-}
 module Text.Markdown.Unlit (
   unlit
+, Selector (..)
+, parseSelector
 , CodeBlock (..)
 , parse
 #ifdef TEST
@@ -11,11 +13,43 @@ module Text.Markdown.Unlit (
 import Control.Applicative
 import Data.List
 import Data.Char
+import Data.String
 
-unlit :: String -> String
-unlit = unlines . concatMap codeBlockContent . filter (p . codeBlockClasses) . parse
+unlit :: Selector -> String -> String
+unlit selector = unlines . concatMap codeBlockContent . filter (toP selector . codeBlockClasses) . parse
   where
-    p = (&&) <$> elem "literate" <*> elem "haskell"
+    toP :: Selector -> [String] -> Bool
+    toP = go
+      where
+        go s = case s of
+          Class c -> elem c
+          a :&: b -> (&&) <$> go a <*> go b
+          a :|: b -> (||) <$> go a <*> go b
+
+infixr 3 :&:
+infixr 2 :|:
+
+data Selector
+  = Class String
+  | Selector :&: Selector
+  | Selector :|: Selector
+  deriving (Eq, Show)
+
+parseSelector :: String -> Selector
+parseSelector = foldr1 (:|:) . map parseAnds . words
+  where
+    parseAnds = foldr1 (:&:) . map Class . split (== '+')
+
+    -- a copy from https://github.com/sol/string
+    split :: (Char -> Bool) -> String -> [String]
+    split p = go
+      where
+        go xs = case break p xs of
+          (ys, [])   -> [ys]
+          (ys, _:zs) -> ys : go zs
+
+instance IsString Selector where
+  fromString = Class
 
 data CodeBlock = CodeBlock {
   codeBlockClasses :: [String]

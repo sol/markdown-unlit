@@ -1,10 +1,11 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Main where
 
 import           System.IO
 import           System.Exit
 import           System.Environment
 
-import           Text.Markdown.Unlit (unlit)
+import           Text.Markdown.Unlit
 
 main :: IO ()
 main = getArgs >>= \args -> case args of
@@ -17,7 +18,7 @@ main = getArgs >>= \args -> case args of
   -- #line 1 "label"
   --
   ["-h", _, infile, outfile] ->
-    fmap unlit (readFile infile) >>= writeFile outfile
+    fmap (unlit $ "haskell" :&: "literate") (readFile infile) >>= writeFile outfile
   _ -> do
     name <- getProgName
     hPutStrLn stderr ("usage: " ++ name ++ " -h label infile outfile")
