@@ -8,7 +8,7 @@ The following steps show how to set things up, so that:
  * The Haskell code in your README.markdown gets syntax highlighted on GitHub
  * You can run your literate Haskell within GHCi
  * You can create a Cabal `test-suite` from your `README.markdown` (No broken
-   code examples anymore. *Yeah!*)
+   code examples anymore, yay!)
 
 ### 1. Install `markdown-unlit`
 
@@ -51,14 +51,14 @@ literate program.
 
 At this point we can load the code into GHCi:
 
-    $ ghci -pgmLmarkdown-unlit README.lhs
+    $ ghci -pgmL markdown-unlit -optL haskell+literate README.lhs
     *Main> main
     That was easy!
 
 Or better yet, pipe the required flag into a `.ghci` file, and forget about it:
 
 ```
-$ echo ':set -pgmLmarkdown-unlit' > .ghci
+$ echo ':set -pgmLmarkdown-unlit -optL haskell+literate' > .ghci
 ```
 ```
 $ ghci README.lhs
@@ -81,7 +81,7 @@ test-suite readme
   type:           exitcode-stdio-1.0
   main-is:        README.lhs
   build-depends:  base
-  ghc-options:    -pgmL markdown-unlit
+  ghc-options:    -pgmL markdown-unlit -optL haskell+literate
 ```
 
 Run it like so:
