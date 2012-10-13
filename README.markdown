@@ -132,7 +132,8 @@ extracts all code that is either marked with `.foo` or `.bar`.
  * class names have to be enclosed in curly brackets, e.g. `~~~ .foo` does not
    work
 
-If you want any of those lifted, open a ticket or pull request.
+If you want to get any of those limitations lifted, open a ticket or send a
+pull request.
 
 ### Contributing
 
