@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE CPP, OverloadedStrings #-}
 module Text.Markdown.Unlit (
   run
 , unlit
@@ -41,7 +41,7 @@ run args =
       hPutStrLn stderr ("usage: " ++ name ++ " [selector] -h label infile outfile")
       exitFailure
     where
-      mkSelector = fromMaybe (Class "haskell") . parseSelector . unwords
+      mkSelector = fromMaybe ("haskell" :&: Not "ignore") . parseSelector . unwords
 
 unlit :: FilePath -> Selector -> String -> String
 unlit fileName selector = unlines . concatMap formatCB . filter (toP selector . codeBlockClasses) . parse

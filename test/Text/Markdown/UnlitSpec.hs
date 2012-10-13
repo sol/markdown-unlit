@@ -31,14 +31,14 @@ spec = do
         (r, Left (ExitFailure 1)) <- hCapture [stderr] (try $ run [])
         r `shouldBe` "usage: foo [selector] -h label infile outfile\n"
 
-    it "unlits code marked with .haskell by default" $ do
+    it "unlits code marked with .haskell by default (unless it is marked with .ignore as well)" $ do
       withTempFile $ \infile -> withTempFile $ \outfile -> do
         writeFile infile . build $ do
           "~~~ {.haskell}"
           "some code"
 
           "~~~"
-          "~~~ {.not-haskell}"
+          "~~~ {.haskell .ignore}"
           "some other code"
 
           "~~~"
