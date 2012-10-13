@@ -78,6 +78,36 @@ Run it like so:
 
     $ cabal configure --enable-tests && cabal build && cabal test
 
+## Customizing
+
+By default, `markdown-unlit` extracts all code that is marked with `.haskell`,
+unless it is marked with `.ignore` as well.  You can customize this by passing
+`-optL <pattern>` to GHC.
+
+A simple pattern is just a class name, e.g.:
+
+    -optL foo
+
+extracts all code that is marked with `.foo`.
+
+A class name can be negated by prepending it with a `!`, e.g.
+
+    -optL !foo
+
+extracts all code, unless it is marked with `.foo`.
+
+You can use `+` to combine two patterns with *AND*, e.g.
+
+    -optL foo+bar
+
+extracts all code that is marked with both `.foo` and `.bar`.
+
+If `-optL` is given multiple times, the patterns are combined with *OR*, e.g.
+
+    -optL foo -optL bar
+
+extracts all code that is either marked with `.foo` or `.bar`.
+
 ## Real world examples
 
  * [attoparsec-parsec](https://github.com/sol/attoparsec-parsec#readme)
