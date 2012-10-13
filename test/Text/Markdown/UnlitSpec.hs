@@ -71,6 +71,9 @@ spec = do
     it "parses whitespace as :|:" $ do
       parseSelector "foo bar baz" `shouldBe` Just ("foo" :|: "bar" :|: "baz")
 
+    it "parses ! as Not" $ do
+      parseSelector "foo+!bar+baz" `shouldBe` Just ("foo" :&: Not "bar" :&: "baz")
+
     it "can handle a combination of :&: and :|:" $ do
       parseSelector "foo+bar baz+bar" `shouldBe` Just ("foo" :&: "bar" :|: "baz" :&: "bar")
 
@@ -89,6 +92,19 @@ spec = do
       `shouldBe` (build $ do
         "#line 2 \"Foo.lhs\""
         "foo"
+        )
+
+    it "can handle Not" $ do
+      unlit "Foo.lhs" (Not "foo") . build $ do
+        "~~~ {.foo}"
+        "1"
+        "~~~"
+        "~~~ {.bar}"
+        "2"
+        "~~~"
+      `shouldBe` (build $ do
+        "#line 5 \"Foo.lhs\""
+        "2"
         )
 
     it "can handle :&:" $ do
@@ -135,6 +151,25 @@ spec = do
         "one"
         "#line 5 \"Foo.lhs\""
         "two"
+        )
+
+    it "can handle a combination of :&: and Not" $ do
+      unlit "Foo.lhs" ("foo" :&: Not "bar" :&: "baz") . build $ do
+        "~~~ {.foo}"
+        "1"
+        "~~~"
+        "~~~ {.foo .bar}"
+        "2"
+        "~~~"
+        "~~~ {.foo .baz}"
+        "3"
+        "~~~"
+        "~~~ {.foo .bar .baz}"
+        "4"
+        "~~~"
+      `shouldBe` (build $ do
+        "#line 8 \"Foo.lhs\""
+        "3"
         )
 
   describe "parse" $ do

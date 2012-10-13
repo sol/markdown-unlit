@@ -54,6 +54,7 @@ unlit fileName selector = unlines . concatMap formatCB . filter (toP selector . 
       where
         go s = case s of
           Class c -> elem c
+          Not p   -> not . go p
           a :&: b -> (&&) <$> go a <*> go b
           a :|: b -> (||) <$> go a <*> go b
 
@@ -62,6 +63,7 @@ infixr 2 :|:
 
 data Selector
   = Class String
+  | Not Selector
   | Selector :&: Selector
   | Selector :|: Selector
   deriving (Eq, Show)
@@ -71,7 +73,11 @@ parseSelector input = case words input of
   [] -> Nothing
   xs -> (Just . foldr1 (:|:) . map parseAnds) xs
   where
-    parseAnds = foldr1 (:&:) . map Class . split (== '+')
+    parseAnds = foldr1 (:&:) . map parseClass . split (== '+')
+
+    parseClass c = case c of
+      '!':xs -> Not (Class xs)
+      _      -> Class c
 
     -- a copy from https://github.com/sol/string
     split :: (Char -> Bool) -> String -> [String]
