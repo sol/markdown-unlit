@@ -1,14 +1,28 @@
-# Literate Haskell support for GitHub's Markdown flavor
+# Literate Haskell support for Markdown
 
-> `markdown-unlit` allows you to have a `README.markdown`, that at the same
-> time is a *literate Haskell* program.
+`markdown-unlit` is a custom `unlit` program.  It can be used to extract
+Haskell code from Markdown files.
 
-The following steps show how to set things up, so that:
+To use it with GHC, add
 
- * The Haskell code in your README.markdown gets syntax highlighted on GitHub
- * You can run your literate Haskell within GHCi
- * You can create a Cabal `test-suite` from your `README.markdown` (No broken
+    ghc-options: -pgmL markdown-unlit
+
+to your cabal file.
+
+## Extended example
+
+> tl;dr `markdown-unlit` allows you to have a `README.markdown`, that at the
+> same time is a literate Haskell program.
+
+The following steps show you how to set things up, so that:
+
+ * the Haskell code in your README.markdown gets syntax highlighted on GitHub
+ * you can run your literate Haskell within GHCi
+ * you can create a Cabal `test-suite` from your `README.markdown` (no broken
    code examples anymore, yay!)
+
+The complete code of this example is provided in the [`example`]
+(https://github.com/sol/markdown-unlit/tree/doc/example) subdirectory.
 
 ### 1. Install `markdown-unlit`
 
@@ -22,16 +36,17 @@ The following steps show how to set things up, so that:
 
     Here is a basic example:
 
-    ~~~ {.haskell .literate}
+    ~~~ {.haskell}
     main :: IO ()
     main = putStrLn "That was easy!"
     ~~~
 
 We use fenced code blocks here.  They are supported by GitHub's README
-renderer, and many other software packages (e.g. Pandoc).
+renderer, and many other software packages (e.g.
+[Pandoc](http://johnmacfarlane.net/pandoc/)).
 
-All code blocks with class `.haskell` are syntax highlighted on GitHub
-([like so](https://github.com/sol/markdown-unlit/blob/master/example/README.markdown#readme)).
+Code blocks with class `.haskell` are syntax highlighted on GitHub ([like
+so](https://github.com/sol/markdown-unlit/blob/master/example/README.markdown#readme)).
 
 ### 3. Create a symbolic link `README.lhs -> README.markdown`
 
