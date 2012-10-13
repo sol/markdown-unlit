@@ -123,6 +123,24 @@ If `-optL` is given multiple times, the patterns are combined with *OR*, e.g.
 
 extracts all code that is either marked with `.foo` or `.bar`.
 
+## Development
+
+### Limitations
+
+ * [indented code blocks](http://daringfireball.net/projects/markdown/syntax#precode) are not yet supported
+ * code blocks fenced with ```` ``` ```` are not yet supported
+ * class names have to be enclosed in curly brackets, e.g. `~~~ .foo` does not
+   work
+
+If you want any of those lifted, open a ticket or pull request.
+
+### Contributing
+
+Add tests for new code, and make sure that the test suite passes with your
+modifications.
+
+    cabal configure --enable-tests && cabal build && cabal test
+
 ## Real world examples
 
  * [attoparsec-parsec](https://github.com/sol/attoparsec-parsec#readme)
