@@ -10,4 +10,4 @@ test-suite readme
   type:           exitcode-stdio-1.0
   main-is:        README.lhs
   build-depends:  base
-  ghc-options:    -pgmL markdown-unlit -optL haskell+literate
+  ghc-options:    -pgmL markdown-unlit

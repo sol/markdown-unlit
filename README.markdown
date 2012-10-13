@@ -27,21 +27,11 @@ The following steps show how to set things up, so that:
     main = putStrLn "That was easy!"
     ~~~
 
-    And here is some code that looks nice, but does not yet work:
-
-    ~~~ {.haskell}
-    main :: IO ()
-    main = launchMissiles
-    ~~~
-
 We use fenced code blocks here.  They are supported by GitHub's README
 renderer, and many other software packages (e.g. Pandoc).
 
 All code blocks with class `.haskell` are syntax highlighted on GitHub
 ([like so](https://github.com/sol/markdown-unlit/blob/master/example/README.markdown#readme)).
-
-All code blocks with classes `.haskell` and `.literate` are part of the
-literate program.
 
 ### 3. Create a symbolic link `README.lhs -> README.markdown`
 
@@ -51,14 +41,14 @@ literate program.
 
 At this point we can load the code into GHCi:
 
-    $ ghci -pgmL markdown-unlit -optL haskell+literate README.lhs
+    $ ghci -pgmL markdown-unlit README.lhs
     *Main> main
     That was easy!
 
 Or better yet, pipe the required flag into a `.ghci` file, and forget about it:
 
 ```
-$ echo ':set -pgmLmarkdown-unlit -optL haskell+literate' > .ghci
+$ echo ':set -pgmL markdown-unlit' > .ghci
 ```
 ```
 $ ghci README.lhs
@@ -81,7 +71,7 @@ test-suite readme
   type:           exitcode-stdio-1.0
   main-is:        README.lhs
   build-depends:  base
-  ghc-options:    -pgmL markdown-unlit -optL haskell+literate
+  ghc-options:    -pgmL markdown-unlit
 ```
 
 Run it like so:
