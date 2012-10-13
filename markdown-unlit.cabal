@@ -1,5 +1,5 @@
 name:             markdown-unlit
-version:          0.1.0
+version:          0.2.0
 synopsis:         Literate Haskell support for GitHub's Markdown flavor
 category:         Development
 license:          MIT
