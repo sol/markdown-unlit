@@ -9,5 +9,5 @@ library
 test-suite readme
   type:           exitcode-stdio-1.0
   main-is:        README.lhs
-  build-depends:  base
+  build-depends:  base, markdown-unlit
   ghc-options:    -pgmL markdown-unlit

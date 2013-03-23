@@ -11,15 +11,15 @@ to your cabal file.
 
 ## Extended example
 
-> tl;dr `markdown-unlit` allows you to have a `README.markdown`, that at the
+> tl;dr `markdown-unlit` allows you to have a `README.md`, that at the
 > same time is a literate Haskell program.
 
 The following steps show you how to set things up, so that:
 
- * the Haskell code in your README.markdown gets syntax highlighted on GitHub
+ * the Haskell code in your `README.md` gets syntax highlighted on GitHub
  * you can run your literate Haskell within GHCi
- * you can create a Cabal `test-suite` from your `README.markdown` (no broken
-   code examples anymore, yay!)
+ * you can create a Cabal `test-suite` from your `README.md` (no broken code
+   examples anymore, yay!)
 
 The complete code of this example is provided in the [`example`]
 (https://github.com/sol/markdown-unlit/tree/doc/example) subdirectory.
@@ -29,7 +29,7 @@ The complete code of this example is provided in the [`example`]
     $ cabal update && cabal install markdown-unlit
 
 
-### 2. Create a `README.markdown`
+### 2. Create a `README.md`
 
 
     # nifty-library: Do nifty things (effortlessly!)
@@ -46,13 +46,13 @@ renderer, and many other software packages (e.g.
 [Pandoc](http://johnmacfarlane.net/pandoc/)).
 
 Code blocks with class `.haskell` are syntax highlighted on GitHub ([like
-so](https://github.com/sol/markdown-unlit/blob/master/example/README.markdown#readme)).
+so](https://github.com/sol/markdown-unlit/blob/master/example/README.md#readme)).
 
-### 3. Create a symbolic link `README.lhs -> README.markdown`
+### 3. Create a symbolic link `README.lhs -> README.md`
 
-    $ ln -s README.markdown README.lhs
+    $ ln -s README.md README.lhs
 
-### 4. Run yor code
+### 4. Run your code
 
 At this point we can load the code into GHCi:
 
@@ -85,7 +85,7 @@ library
 test-suite readme
   type:           exitcode-stdio-1.0
   main-is:        README.lhs
-  build-depends:  base
+  build-depends:  base, markdown-unlit
   ghc-options:    -pgmL markdown-unlit
 ```
 
