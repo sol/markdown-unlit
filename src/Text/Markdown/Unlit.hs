@@ -108,14 +108,16 @@ parse = go . zip [2..] . lines
         (cb, rest) -> cb : go rest
 
     takeCB :: Line -> [Line] -> (CodeBlock, [Line])
-    takeCB (n, fence) xs = case break isFence xs of
-      (cb, rest) -> (CodeBlock (parseClasses fence) (map snd cb) n, drop 1 rest)
+    takeCB (n, fence) xs =
+      let indent = length . takeWhile isSpace $ fence
+      in case break isFence xs of
+        (cb, rest) -> (CodeBlock (parseClasses fence) (map (drop indent . snd) cb) n, drop 1 rest)
 
     isFence :: Line -> Bool
-    isFence = isPrefixOf "~~~" . snd
+    isFence = isPrefixOf "~~~" . dropWhile isSpace . snd
 
 parseClasses :: String -> [String]
-parseClasses xs = case dropWhile isSpace . dropWhile (== '~') $ xs of
+parseClasses xs = case dropWhile isSpace . dropWhile (== '~') . dropWhile isSpace $ xs of
   '{':ys -> words . replace '.' ' ' . takeWhile (/= '}') $ ys
   _      -> []
 
