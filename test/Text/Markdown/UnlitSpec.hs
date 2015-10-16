@@ -186,6 +186,16 @@ spec = do
         "some other text"
       `shouldBe` [["some", "code"]]
 
+    it "parses an indented code block" $ do
+      map codeBlockContent . parse . build $ do
+        "1. some text"
+        "    ~~~"
+        "    some"
+        "      code"
+        "    ~~~"
+        "2. some other text"
+      `shouldBe` [["some", "  code"]]
+
     it "parses an empty code block" $ do
       map codeBlockContent . parse . build $ do
         "some text"
@@ -200,6 +210,16 @@ spec = do
         "some code"
         "~~~"
       `shouldBe` [["haskell", "literate"]]
+
+    it "attaches classes to indented code blocks" $ do
+      map codeBlockClasses . parse . build $ do
+        "1. some text"
+        "    ~~~ {.haskell .literate}"
+        "    some code"
+        "    ~~~"
+        "2. some other text"
+      `shouldBe` [["haskell", "literate"]]
+
 
     it "attaches source locations to code blocks" $ do
       map codeBlockStartLine . parse . build $ do
