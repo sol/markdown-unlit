@@ -1,5 +1,5 @@
 name:             markdown-unlit
-version:          0.3.0
+version:          0.3.1
 synopsis:         Literate Haskell support for Markdown
 category:         Development
 license:          MIT

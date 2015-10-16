@@ -1,5 +1,5 @@
 language: haskell
 
 script:
-  - cabal test
+  - cabal configure --enable-tests --ghc-options=-Werror && cabal build && cabal test
   - cd example && cabal install --only-dependencies --enable-tests && cabal configure --enable-tests && cabal build && cabal test
