@@ -1,0 +1,43 @@
+name:             markdown-unlit
+version:          0.2.0.1
+synopsis:         Literate Haskell support for Markdown
+category:         Development
+license:          MIT
+copyright:        (c) 2012-2013 Simon Hengel
+author:           Simon Hengel <sol@typeful.net>
+maintainer:       Simon Hengel <sol@typeful.net>
+description:      "Documentation is here: <https://github.com/sol/markdown-unlit#readme>"
+
+github: sol/markdown-unlit
+
+ghc-options: -Wall
+
+dependencies:
+  - base == 4.*
+  - base-compat
+
+library:
+  source-dirs: src
+
+executables:
+  markdown-unlit:
+    main: Main.hs
+    source-dirs:
+      - driver
+    dependencies:
+      - markdown-unlit
+
+tests:
+  spec:
+    cpp-options: -DTEST
+    main: Spec.hs
+    source-dirs:
+      - src
+      - test
+    dependencies:
+      - directory
+      - hspec == 2.*
+      - QuickCheck
+      - silently
+      - stringbuilder
+      - temporary

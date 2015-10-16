@@ -11,7 +11,8 @@ module Text.Markdown.Unlit (
 #endif
 ) where
 
-import           Control.Applicative
+import           Prelude ()
+import           Prelude.Compat
 import           Data.Maybe
 import           Data.List
 import           Data.Char
