@@ -9,6 +9,7 @@ import           Control.Exception
 import           System.Exit
 import           System.IO.Silently
 import           System.IO
+import           System.IO.Temp (withSystemTempFile)
 import           System.Directory
 import qualified Control.Exception as E
 
@@ -18,8 +19,7 @@ main :: IO ()
 main = hspec spec
 
 withTempFile :: (FilePath -> IO ()) -> IO ()
-withTempFile action = do
-  (f, h) <- openTempFile "." "hspec-tmp"
+withTempFile action = withSystemTempFile "hspec" $ \f h -> do
   hClose h
   action f `E.finally` removeFile f
 
@@ -219,7 +219,6 @@ spec = do
         "    ~~~"
         "2. some other text"
       `shouldBe` [["haskell", "literate"]]
-
 
     it "attaches source locations to code blocks" $ do
       map codeBlockStartLine . parse . build $ do

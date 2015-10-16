@@ -54,3 +54,4 @@ test-suite spec
     , silently
     , hspec >= 1.3
     , QuickCheck
+    , temporary
