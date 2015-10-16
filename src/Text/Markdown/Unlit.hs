@@ -14,7 +14,7 @@ module Text.Markdown.Unlit (
 import           Prelude ()
 import           Prelude.Compat
 import           Data.Maybe
-import           Data.List
+import           Data.List.Compat
 import           Data.Char
 import           Data.String
 import           System.IO

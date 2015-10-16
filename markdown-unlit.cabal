@@ -3,7 +3,7 @@
 -- see: https://github.com/sol/hpack
 
 name:             markdown-unlit
-version:          0.3.0
+version:          0.3.1
 synopsis:         Literate Haskell support for Markdown
 category:         Development
 homepage:         https://github.com/sol/markdown-unlit#readme
