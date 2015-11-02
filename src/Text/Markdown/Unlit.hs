@@ -21,6 +21,9 @@ import           System.IO
 import           System.Exit
 import           System.Environment
 
+blockPrefixChars :: [Char]
+blockPrefixChars = ['`', '~']
+
 -- | Program entry point.
 run :: [String] -> IO ()
 run args =
@@ -115,10 +118,10 @@ parse = go . zip [2..] . lines
         (cb, rest) -> (CodeBlock (parseClasses fence) (map (drop indent . snd) cb) n, drop 1 rest)
 
     isFence :: Line -> Bool
-    isFence = isPrefixOf "~~~" . dropWhile isSpace . snd
+    isFence = (\x -> any (\c -> [c,c,c] `isPrefixOf` x) blockPrefixChars) . dropWhile isSpace . snd
 
 parseClasses :: String -> [String]
-parseClasses xs = case dropWhile isSpace . dropWhile (== '~') . dropWhile isSpace $ xs of
+parseClasses xs = case dropWhile isSpace . dropWhile (flip elem blockPrefixChars) . dropWhile isSpace $ xs of
   '{':ys -> words . replace '.' ' ' . takeWhile (/= '}') $ ys
   _      -> []
 
