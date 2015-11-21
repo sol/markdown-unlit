@@ -245,3 +245,10 @@ spec = do
 
     it "treats dots as whitespace" $ do
       parseClasses "~~~ {foo.bar. ..}" `shouldBe` ["foo", "bar"]
+
+    context "without {...}" $ do
+      it "accepts single class" $ do
+        parseClasses "```haskell" `shouldBe` ["haskell"]
+
+      it "accepts multiple classes" $ do
+        parseClasses "```.haskell .ignore" `shouldBe` ["haskell", "ignore"]

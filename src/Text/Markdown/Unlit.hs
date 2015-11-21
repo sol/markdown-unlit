@@ -127,10 +127,9 @@ parse = go . zip [2..] . lines
         p line = any (`isPrefixOf` line) fences
 
 parseClasses :: String -> [String]
-parseClasses xs = case dropWhile isSpace . dropWhile (`elem` fenceChars) . dropWhile isSpace $ xs of
-  '{':ys -> words . replace '.' ' ' . takeWhile (/= '}') $ ys
-  _      -> []
-
+parseClasses xs = words . replace '.' ' ' $ case dropWhile isSpace . dropWhile (`elem` fenceChars) . dropWhile isSpace $ xs of
+  '{':ys -> takeWhile (/= '}') ys
+  ys -> ys
 
 replace :: Char -> Char -> String -> String
 replace x sub = map f
