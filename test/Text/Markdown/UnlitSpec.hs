@@ -186,6 +186,14 @@ spec = do
         "some other text"
       `shouldBe` [["some", "code"]]
 
+    it "accepts backticks as fence" $ do
+      parse . build $ do
+        "``` {.haskell .ignore}"
+        "some"
+        "code"
+        "```"
+      `shouldBe` [CodeBlock ["haskell", "ignore"] ["some", "code"] 2]
+
     it "parses an indented code block" $ do
       map codeBlockContent . parse . build $ do
         "1. some text"

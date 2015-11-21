@@ -125,7 +125,6 @@ parseClasses xs = case dropWhile isSpace . dropWhile (flip elem blockPrefixChars
   '{':ys -> words . replace '.' ' ' . takeWhile (/= '}') $ ys
   _      -> []
 
-
 replace :: Char -> Char -> String -> String
 replace x sub = map f
   where
