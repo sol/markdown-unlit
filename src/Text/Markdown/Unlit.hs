@@ -21,8 +21,11 @@ import           System.IO
 import           System.Exit
 import           System.Environment
 
-blockPrefixChars :: [Char]
-blockPrefixChars = ['`', '~']
+fenceChars :: [Char]
+fenceChars = ['`', '~']
+
+fences :: [String]
+fences = map (replicate 3) fenceChars
 
 -- | Program entry point.
 run :: [String] -> IO ()
@@ -118,12 +121,16 @@ parse = go . zip [2..] . lines
         (cb, rest) -> (CodeBlock (parseClasses fence) (map (drop indent . snd) cb) n, drop 1 rest)
 
     isFence :: Line -> Bool
-    isFence = (\x -> any (\c -> [c,c,c] `isPrefixOf` x) blockPrefixChars) . dropWhile isSpace . snd
+    isFence = p . dropWhile isSpace . snd
+      where
+        p :: String -> Bool
+        p line = any (`isPrefixOf` line) fences
 
 parseClasses :: String -> [String]
-parseClasses xs = case dropWhile isSpace . dropWhile (flip elem blockPrefixChars) . dropWhile isSpace $ xs of
+parseClasses xs = case dropWhile isSpace . dropWhile (`elem` fenceChars) . dropWhile isSpace $ xs of
   '{':ys -> words . replace '.' ' ' . takeWhile (/= '}') $ ys
   _      -> []
+
 
 replace :: Char -> Char -> String -> String
 replace x sub = map f
