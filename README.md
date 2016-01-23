@@ -128,12 +128,8 @@ extracts all code that is either marked with `.foo` or `.bar`.
 ### Limitations
 
  * [indented code blocks](http://daringfireball.net/projects/markdown/syntax#precode) are not yet supported
- * code blocks fenced with ```` ``` ```` are not yet supported
- * class names have to be enclosed in curly brackets, e.g. `~~~ .foo` does not
-   work
 
-If you want to get any of those limitations lifted, open a ticket or send a
-pull request.
+If you want to get any limitation lifted, open a ticket or send a pull request.
 
 ### Contributing
 
