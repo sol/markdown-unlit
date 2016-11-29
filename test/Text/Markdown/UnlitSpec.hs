@@ -15,6 +15,7 @@ import qualified Control.Exception as E
 
 import           Text.Markdown.Unlit
 
+
 main :: IO ()
 main = hspec spec
 
@@ -33,20 +34,22 @@ spec = do
 
     it "unlits code marked with .haskell by default (unless it is marked with .ignore as well)" $ do
       withTempFile $ \infile -> withTempFile $ \outfile -> do
-        writeFile infile . build $ do
-          "~~~ {.haskell}"
-          "some code"
-
-          "~~~"
-          "~~~ {.haskell .ignore}"
-          "some other code"
-
-          "~~~"
-        run ["-h", "Foo.lhs", infile, outfile]
-        readFile outfile `shouldReturn` (build $ do
-          "#line 2 \"Foo.lhs\""
-          "some code"
-          )
+        let withEsc esc = do
+              writeFile infile $ unlines
+                  [ esc ++ " {.haskell}"
+                  , "some code"
+                  , esc
+                  , esc ++ " {.haskell .ignore}"
+                  , "some other code"
+                  , esc
+                  ]
+              run ["-h", "Foo.lhs", infile, outfile]
+              readFile outfile `shouldReturn` (build $ do
+                "#line 2 \"Foo.lhs\""
+                "some code"
+                )
+        withEsc "~~~"
+        withEsc "```"
 
     it "can be customized" $ do
       withTempFile $ \infile -> withTempFile $ \outfile -> do
