@@ -40,11 +40,7 @@ The complete code of this example is provided in the [`example`](https://github.
     main = putStrLn "That was easy!"
     ```
 
-We use fenced code blocks here.  They are supported by GitHub's README
-renderer, and many other software packages (e.g.
-[Pandoc](http://johnmacfarlane.net/pandoc/)).
-
-Code blocks with class `.haskell` are syntax highlighted on GitHub ([like
+Code blocks with class `haskell` are syntax highlighted on GitHub ([like
 so](https://github.com/sol/markdown-unlit/blob/master/example/README.md#readme)).
 
 ### 3. Create a symbolic link `README.lhs -> README.md`
@@ -94,33 +90,33 @@ Run it like so:
 
 ## Customizing
 
-By default, `markdown-unlit` extracts all code that is marked with `.haskell`,
-unless it is marked with `.ignore` as well.  You can customize this by passing
+By default, `markdown-unlit` extracts all code that is marked with `haskell`,
+unless it is marked with `ignore` as well.  You can customize this by passing
 `-optL <pattern>` to GHC.
 
 A simple pattern is just a class name, e.g.:
 
     -optL foo
 
-extracts all code that is marked with `.foo`.
+extracts all code that is marked with `foo`.
 
 A class name can be negated by prepending it with a `!`, e.g.
 
     -optL !foo
 
-extracts all code, unless it is marked with `.foo`.
+extracts all code, unless it is marked with `foo`.
 
 You can use `+` to combine two patterns with *AND*, e.g.
 
     -optL foo+bar
 
-extracts all code that is marked with both `.foo` and `.bar`.
+extracts all code that is marked with both `foo` and `bar`.
 
 If `-optL` is given multiple times, the patterns are combined with *OR*, e.g.
 
     -optL foo -optL bar
 
-extracts all code that is either marked with `.foo` or `.bar`.
+extracts all code that is either marked with `foo` or `bar`.
 
 ## Development
 
