@@ -21,8 +21,7 @@ The following steps show you how to set things up, so that:
  * you can create a Cabal `test-suite` from your `README.md` (no broken code
    examples anymore, yay!)
 
-The complete code of this example is provided in the [`example`]
-(https://github.com/sol/markdown-unlit/tree/master/example) subdirectory.
+The complete code of this example is provided in the [`example`](https://github.com/sol/markdown-unlit/tree/master/example) subdirectory.
 
 ### 1. Install `markdown-unlit`
 
