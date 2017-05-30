@@ -36,10 +36,10 @@ The complete code of this example is provided in the [`example`]
 
     Here is a basic example:
 
-    ~~~ {.haskell}
+    ```haskell
     main :: IO ()
     main = putStrLn "That was easy!"
-    ~~~
+    ```
 
 We use fenced code blocks here.  They are supported by GitHub's README
 renderer, and many other software packages (e.g.

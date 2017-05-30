@@ -2,7 +2,7 @@
 
 Here is a basic example:
 
-~~~ {.haskell}
+```haskell
 main :: IO ()
 main = putStrLn "That was easy!"
-~~~
+```
