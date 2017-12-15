@@ -2,10 +2,10 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 95e8546cf477663afb95b9e3b412b697d92cbd570ec0e8f55f3084a93f59ecf8
+-- hash: 1ed9462425c5de84a4149bff9c95c17ee3c2c60b718cb4673c63fae99d454686
 
 name:             markdown-unlit
-version:          0.5.0
+version:          0.4.1
 synopsis:         Literate Haskell support for Markdown
 category:         Development
 homepage:         https://github.com/sol/markdown-unlit#readme
