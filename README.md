@@ -9,6 +9,10 @@ To use it with GHC, add
 
 to your cabal file.
 
+**Note**: to builld with `cabal new-build`, you also need to add
+
+    build-tool-depends: markdown-unlit:markdown-unlit
+
 ## Extended example
 
 > tl;dr `markdown-unlit` allows you to have a `README.md`, that at the
