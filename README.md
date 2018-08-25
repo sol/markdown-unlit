@@ -82,6 +82,7 @@ test-suite readme
   main-is:        README.lhs
   build-depends:  base, markdown-unlit
   ghc-options:    -pgmL markdown-unlit
+  build-tool-depends: markdown-unlit:markdown-unlit
 ```
 
 Run it like so:
