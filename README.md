@@ -58,7 +58,7 @@ At this point we can load the code into GHCi:
 Or better yet, pipe the required flag into a `.ghci` file, and forget about it:
 
 ```
-$ echo ':set -pgmL markdown-unlit' > .ghci
+$ echo ':set -pgmL markdown-unlit' >> .ghci
 ```
 ```
 $ ghci README.lhs
