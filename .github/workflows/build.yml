@@ -1,0 +1,49 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: ${{ matrix.os }} / GHC ${{ matrix.ghc }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+        ghc:
+          - '8.6'
+          - '8.8'
+          - '8.10'
+        include:
+          - os: macos-latest
+            ghc: latest
+          - os: windows-latest
+            ghc: latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-haskell@v1
+        with:
+          ghc-version: ${{ matrix.ghc }}
+
+      - name: Install dependencies
+        run: |
+          cabal update
+          cabal build --only-dependencies --enable-tests --enable-benchmarks
+      - name: Build
+        run: cabal build all --enable-tests --enable-benchmarks
+      - name: Run tests
+        run: cabal test all --test-show-details=direct --enable-tests --enable-benchmarks # --enable-tests is necessary due to https://github.com/haskell/cabal/issues/5079
+        env:
+          HSPEC_OPTIONS: --color
+
+  success:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps: [run: echo success]
