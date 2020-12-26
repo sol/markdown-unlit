@@ -29,6 +29,7 @@ executables:
 
 tests:
   spec:
+    build-tools: hspec-discover
     cpp-options: -DTEST
     main: Spec.hs
     source-dirs:
