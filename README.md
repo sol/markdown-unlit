@@ -21,7 +21,7 @@ The following steps show you how to set things up, so that:
  * you can create a Cabal `test-suite` from your `README.md` (no broken code
    examples anymore, yay!)
 
-The complete code of this example is provided in the [`example`](https://github.com/sol/markdown-unlit/tree/master/example) subdirectory.
+The complete code of this example is provided in the [`example`](https://github.com/sol/markdown-unlit/tree/main/example) subdirectory.
 
 ### 1. Install `markdown-unlit`
 
@@ -41,7 +41,7 @@ The complete code of this example is provided in the [`example`](https://github.
     ```
 
 Code blocks with class `haskell` are syntax highlighted on GitHub ([like
-so](https://github.com/sol/markdown-unlit/blob/master/example/README.md#readme)).
+so](https://github.com/sol/markdown-unlit/blob/main/example/README.md#readme)).
 
 ### 3. Create a symbolic link `README.lhs -> README.md`
 
