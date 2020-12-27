@@ -32,14 +32,10 @@ jobs:
         with:
           ghc-version: ${{ matrix.ghc }}
 
-      - name: Install dependencies
-        run: |
-          cabal update
-          cabal build --only-dependencies --enable-tests --enable-benchmarks
-      - name: Build
-        run: cabal build all --enable-tests --enable-benchmarks
-      - name: Run tests
-        run: cabal test all --test-show-details=direct --enable-tests --enable-benchmarks # --enable-tests is necessary due to https://github.com/haskell/cabal/issues/5079
+      - run: cabal update
+      - run: cabal configure --enable-tests --enable-benchmarks # NOTE: --enable-tests is necessary due to https://github.com/haskell/cabal/issues/5079
+      - run: cabal build all
+      - run: cabal test all --test-show-details=direct
         env:
           HSPEC_OPTIONS: --color
 
