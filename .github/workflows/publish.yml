@@ -2,16 +2,21 @@ name: publish
 
 on:
   push:
-    tags:
-      - v[0-9]*
+    branches:
+      - main
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - uses: sol/haskell-autotag@v1
+        id: autotag
+
       - run: cabal sdist
       - uses: sol/hackage-publish@dev
         with:
           hackageToken: ${{ secrets.HACKAGE_AUTH_TOKEN }}
           publish: true
+        if: steps.autotag.outputs.created
