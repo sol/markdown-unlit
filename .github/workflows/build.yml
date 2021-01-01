@@ -31,13 +31,7 @@ jobs:
       - uses: actions/setup-haskell@v1
         with:
           ghc-version: ${{ matrix.ghc }}
-
-      - run: cabal update
-      - run: cabal configure --enable-tests --enable-benchmarks # NOTE: --enable-tests is necessary due to https://github.com/haskell/cabal/issues/5079
-      - run: cabal build all
-      - run: cabal test all --test-show-details=direct
-        env:
-          HSPEC_OPTIONS: --color
+      - uses: sol/run-haskell-tests@v1
 
   success:
     needs: [build]
