@@ -3,7 +3,7 @@ version:          0.5.1
 synopsis:         Literate Haskell support for Markdown
 category:         Development
 license:          MIT
-copyright:        (c) 2012-2020 Simon Hengel
+copyright:        (c) 2012-2021 Simon Hengel
 author:           Simon Hengel <sol@typeful.net>
 maintainer:       Simon Hengel <sol@typeful.net>
 description:      "Documentation is here: <https://github.com/sol/markdown-unlit#readme>"
