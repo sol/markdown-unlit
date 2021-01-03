@@ -13,6 +13,8 @@ jobs:
 
       - uses: sol/haskell-autotag@v1
         id: autotag
+        with:
+          prefix: null
 
       - run: cabal sdist
       - uses: sol/hackage-publish@dev
