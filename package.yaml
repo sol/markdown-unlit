@@ -29,15 +29,12 @@ executables:
 
 tests:
   spec:
-    build-tools: hspec-discover
+    defaults: hspec/defaults@v0.1.0
     cpp-options: -DTEST
-    main: Spec.hs
     source-dirs:
       - src
-      - test
     dependencies:
       - directory
-      - hspec == 2.*
       - QuickCheck
       - silently
       - stringbuilder
