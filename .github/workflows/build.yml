@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - main
+  schedule:
+    - cron: 0 0 * * *
 
 jobs:
   build:
@@ -28,12 +30,16 @@ jobs:
             ghc: latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-haskell@v1
+      - uses: haskell/actions/setup@v1
         with:
           ghc-version: ${{ matrix.ghc }}
       - uses: sol/run-haskell-tests@v1
 
   success:
-    needs: [build]
+    needs: build
     runs-on: ubuntu-latest
-    steps: [run: echo success]
+    if: always() # this is required as GitHub considers "skipped" jobs as "passed" when checking branch protection rules
+
+    steps:
+      - run: false
+        if: needs.build.result != 'success'
