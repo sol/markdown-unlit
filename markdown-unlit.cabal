@@ -1,4 +1,4 @@
-cabal-version: 1.12
+cabal-version: 1.18
 
 -- This file has been generated from package.yaml by hpack version 0.34.4.
 --
@@ -16,6 +16,8 @@ copyright:        (c) 2012-2021 Simon Hengel
 author:           Simon Hengel <sol@typeful.net>
 maintainer:       Simon Hengel <sol@typeful.net>
 build-type:       Simple
+extra-doc-files:
+    README.md
 description:      Documentation is here: <https://github.com/sol/markdown-unlit#readme>
 
 source-repository head
