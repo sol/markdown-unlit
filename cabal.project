@@ -1,9 +1,0 @@
-packages:
-  markdown-unlit.cabal
-  example
-
-package markdown-unlit
-  ghc-options: -Werror
-
-package nifty-library
-  ghc-options: -Werror
