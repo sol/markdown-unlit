@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -o nounset
+set -o errexit
+
+cabal exec -- ghci -DTEST -isrc -itest -X$(yaml2json language.yaml | jq -r .language) $(yaml2json language.yaml | jq -r '"-X" + .extensions[]') $*

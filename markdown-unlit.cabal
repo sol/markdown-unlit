@@ -25,6 +25,8 @@ source-repository head
 library
   hs-source-dirs:
       src
+  default-extensions:
+      OverloadedStrings
   ghc-options: -Wall
   build-depends:
       base ==4.*
@@ -41,6 +43,8 @@ executable markdown-unlit
       Paths_markdown_unlit
   hs-source-dirs:
       driver
+  default-extensions:
+      OverloadedStrings
   ghc-options: -Wall
   build-depends:
       base ==4.*
@@ -54,6 +58,8 @@ test-suite spec
   hs-source-dirs:
       test
       src
+  default-extensions:
+      OverloadedStrings
   ghc-options: -Wall
   cpp-options: -DTEST
   build-tool-depends:

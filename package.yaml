@@ -1,3 +1,5 @@
+_: !include language.yaml
+
 name:             markdown-unlit
 version:          0.6.0
 synopsis:         Literate Haskell support for Markdown
@@ -9,6 +11,9 @@ maintainer:       Simon Hengel <sol@typeful.net>
 description:      "Documentation is here: <https://github.com/sol/markdown-unlit#readme>"
 
 github: sol/markdown-unlit
+
+language: *language
+default-extensions: *extensions
 
 ghc-options: -Wall
 
@@ -29,9 +34,11 @@ executables:
 
 tests:
   spec:
-    defaults: hspec/defaults@v0.1.0
+    build-tools: hspec-discover
+    main: Spec.hs
     cpp-options: -DTEST
     source-dirs:
+      - test
       - src
     dependencies:
       - directory
@@ -39,3 +46,4 @@ tests:
       - silently
       - stringbuilder
       - temporary
+      - hspec == 2.*

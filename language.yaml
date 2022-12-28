@@ -1,0 +1,3 @@
+language: &language Haskell2010
+extensions: &extensions
+  - OverloadedStrings

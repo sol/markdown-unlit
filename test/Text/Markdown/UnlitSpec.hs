@@ -1,4 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
 module Text.Markdown.UnlitSpec (main, spec) where
 
 import           Test.Hspec
