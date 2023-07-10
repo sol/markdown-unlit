@@ -34,35 +34,71 @@ spec = do
     it "unlits code marked with .haskell by default (unless it is marked with .ignore as well)" $ do
       withTempFile $ \infile -> withTempFile $ \outfile -> do
         writeFile infile . build $ do
-          "~~~ {.haskell}"
+          "```haskell"
           "some code"
-
-          "~~~"
-          "~~~ {.haskell .ignore}"
+          "```"
+          "```haskell ignore"
           "some other code"
-
-          "~~~"
+          "```"
         run ["-h", "Foo.lhs", infile, outfile]
         readFile outfile `shouldReturn` (build $ do
           "#line 2 \"Foo.lhs\""
           "some code"
           )
 
+    it "moves code that is marked with .top to the beginning of the file" $ do
+      withTempFile $ \infile -> withTempFile $ \outfile -> do
+        writeFile infile . build $ do
+          "```haskell top"
+          "module Foo where"
+          "```"
+          ""
+          "```haskell"
+          "foo :: Int"
+          "foo = 23"
+          "```"
+          ""
+          "```haskell top"
+          "import Bar"
+          "```"
+        run ["-h", "Foo.lhs", infile, outfile]
+        readFile outfile `shouldReturn` (build $ do
+          "#line 2 \"Foo.lhs\""
+          "module Foo where"
+          "#line 11 \"Foo.lhs\""
+          "import Bar"
+          "#line 6 \"Foo.lhs\""
+          "foo :: Int"
+          "foo = 23"
+          )
+
     it "can be customized" $ do
       withTempFile $ \infile -> withTempFile $ \outfile -> do
         writeFile infile . build $ do
-          "~~~ {.foo}"
+          "```foo"
           "some code"
           ""
-          "~~~"
-          "~~~ {.bar}"
+          "```"
+          "``` {.bar}"
           "some other code"
-          "~~~"
+          "```"
         run ["bar", "-h", "Foo.lhs", infile, outfile]
         readFile outfile `shouldReturn` (build $ do
           "#line 6 \"Foo.lhs\""
           "some other code"
           )
+
+  describe "parseReorderingKey" $ do
+    it "returns 0" $ do
+      parseReorderingKey [] `shouldBe` 0
+
+    context "with .top" $ do
+      it "returns minBound" $ do
+        parseReorderingKey ["top"] `shouldBe` minBound
+
+    context "with top:n" $ do
+      it "returns (minBound + n)" $ do
+        parseReorderingKey ["top:20"] `shouldBe` minBound + 20
 
   describe "parseSelector" $ do
     it "parses + as :&:" $ do
