@@ -1,4 +1,6 @@
-{-# LANGUAGE CPP, OverloadedStrings #-}
+{-# LANGUAGE CPP #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ViewPatterns #-}
 module Text.Markdown.Unlit (
   run
 , unlit
@@ -41,17 +43,20 @@ run args =
   -- #line 1 "label"
   --
   case break (== "-h") args of
-    (xs, ["-h", fileName, infile, outfile]) ->
-      readFileUtf8 infile >>= writeFileUtf8 outfile . unlit fileName (mkSelector xs)
-
-    (xs, ["-h", infile]) ->
-      readFileUtf8 infile >>= writeUtf8 stdout . unlit infile (mkSelector xs)
-
-    _ -> do
-      name <- getProgName
-      hPutStrLn stderr ("usage: " ++ name ++ " [selector] -h SRC CUR DST")
-      exitFailure
+    (mkSelector -> selector, "-h" : foo) -> case foo of
+      [src, cur, dst] -> do
+        readFileUtf8 cur >>= writeFileUtf8 dst . unlit src selector
+      [src] -> do
+        readFileUtf8 src >>= writeUtf8 stdout . unlit src selector
+      _ -> usage
+    _ -> usage
     where
+      usage :: IO ()
+      usage = do
+        name <- getProgName
+        hPutStrLn stderr ("usage: " ++ name ++ " [selector] -h SRC CUR DST")
+        exitFailure
+
       mkSelector :: [String] -> Selector
       mkSelector = fromMaybe ("haskell" :&: Not "ignore") . parseSelector . unwords
 
@@ -65,10 +70,10 @@ run args =
       writeUtf8 handle str = hSetEncoding handle utf8 >> hPutStr handle str
 
 unlit :: FilePath -> Selector -> String -> String
-unlit fileName selector = unlines . concatMap formatCB . filter (toP selector . codeBlockClasses) . parse
+unlit src selector = unlines . concatMap formatCB . filter (toP selector . codeBlockClasses) . parse
   where
     formatCB :: CodeBlock -> [String]
-    formatCB cb = ("#line " ++ show (codeBlockStartLine cb) ++ " " ++ show fileName) : codeBlockContent cb
+    formatCB cb = ("#line " ++ show (codeBlockStartLine cb) ++ " " ++ show src) : codeBlockContent cb
 
     toP :: Selector -> [String] -> Bool
     toP = go
