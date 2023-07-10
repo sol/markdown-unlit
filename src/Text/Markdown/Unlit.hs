@@ -1,4 +1,7 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ViewPatterns #-}
 module Text.Markdown.Unlit (
@@ -9,19 +12,22 @@ module Text.Markdown.Unlit (
 , CodeBlock (..)
 , parse
 #ifdef TEST
+, parseReorderingKey
 , parseClasses
 #endif
 ) where
 
 import           Prelude ()
 import           Prelude.Compat
-import           Data.Maybe
-import           Data.List.Compat
+import           Control.Arrow
 import           Data.Char
+import           Data.List.Compat
+import           Data.Maybe
 import           Data.String
-import           System.IO
-import           System.Exit
 import           System.Environment
+import           System.Exit
+import           System.IO
+import           Text.Read
 
 fenceChars :: [Char]
 fenceChars = ['`', '~']
@@ -43,7 +49,7 @@ run args =
   -- #line 1 "label"
   --
   case break (== "-h") args of
-    (mkSelector -> selector, "-h" : foo) -> case foo of
+    (mkSelector -> selector, "-h" : files) -> case files of
       [src, cur, dst] -> do
         readFileUtf8 cur >>= writeFileUtf8 dst . unlit src selector
       [src] -> do
@@ -70,19 +76,47 @@ run args =
       writeUtf8 handle str = hSetEncoding handle utf8 >> hPutStr handle str
 
 unlit :: FilePath -> Selector -> String -> String
-unlit src selector = unlines . concatMap formatCB . filter (toP selector . codeBlockClasses) . parse
+unlit src selector = unlines . concatMap formatCodeBlock . sortCodeBlocks . filter (toPredicate selector . codeBlockClasses) . parse
   where
-    formatCB :: CodeBlock -> [String]
-    formatCB cb = ("#line " ++ show (codeBlockStartLine cb) ++ " " ++ show src) : codeBlockContent cb
+    formatCodeBlock :: CodeBlock -> [String]
+    formatCodeBlock cb = ("#line " ++ show (codeBlockStartLine cb) ++ " " ++ show src) : codeBlockContent cb
 
-    toP :: Selector -> [String] -> Bool
-    toP = go
+    sortCodeBlocks :: [CodeBlock] -> [CodeBlock]
+    sortCodeBlocks = map fst . sortOn snd . addSortKey
+      where
+        addSortKey :: [CodeBlock] -> [(CodeBlock, (ReorderingKey, DeclarationOrder))]
+        addSortKey = zipWith ((id &&&) . sortKey) [0..]
+
+        sortKey :: a -> CodeBlock -> (ReorderingKey, a)
+        sortKey n code = (reorderingKey code, n)
+
+    toPredicate :: Selector -> [String] -> Bool
+    toPredicate = go
       where
         go s = case s of
           Class c -> elem c
           Not p   -> not . go p
           a :&: b -> (&&) <$> go a <*> go b
           a :|: b -> (||) <$> go a <*> go b
+
+newtype DeclarationOrder = DeclarationOrder Int
+  deriving newtype (Eq, Ord, Enum, Num)
+
+newtype ReorderingKey = ReorderingKey Int
+  deriving newtype (Eq, Show, Read, Ord, Bounded, Num)
+
+reorderingKey :: CodeBlock -> ReorderingKey
+reorderingKey = parseReorderingKey . codeBlockClasses
+
+parseReorderingKey :: [String] -> ReorderingKey
+parseReorderingKey = go
+  where
+    go :: [String] -> ReorderingKey
+    go = \ case
+      [] -> 0
+      "top" : _ -> minBound
+      ('t' : 'o' : 'p' : ':' : (readMaybe -> Just n)) : _ -> minBound + n
+      _ : classes -> go classes
 
 infixr 3 :&:
 infixr 2 :|:
