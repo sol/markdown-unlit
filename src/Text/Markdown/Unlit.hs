@@ -42,15 +42,27 @@ run args =
   --
   case break (== "-h") args of
     (xs, ["-h", fileName, infile, outfile]) ->
-      fmap (unlit fileName $ mkSelector xs) (readFileUtf8 infile) >>= writeFileUtf8 outfile
+      readFileUtf8 infile >>= writeFileUtf8 outfile . unlit fileName (mkSelector xs)
+
+    (xs, ["-h", infile]) ->
+      readFileUtf8 infile >>= writeUtf8 stdout . unlit infile (mkSelector xs)
+
     _ -> do
       name <- getProgName
-      hPutStrLn stderr ("usage: " ++ name ++ " [selector] -h label infile outfile")
+      hPutStrLn stderr ("usage: " ++ name ++ " [selector] -h SRC CUR DST")
       exitFailure
     where
+      mkSelector :: [String] -> Selector
       mkSelector = fromMaybe ("haskell" :&: Not "ignore") . parseSelector . unwords
-      readFileUtf8 name = openFile name ReadMode >>= \h -> hSetEncoding h utf8 >> hGetContents h
-      writeFileUtf8 name str = withFile name WriteMode (\h -> hSetEncoding h utf8 >> hPutStr h str)
+
+      readFileUtf8 :: FilePath -> IO String
+      readFileUtf8 name = openFile name ReadMode >>= \ handle -> hSetEncoding handle utf8 >> hGetContents handle
+
+      writeFileUtf8 :: FilePath -> String -> IO ()
+      writeFileUtf8 name str = withFile name WriteMode $ \ handle -> writeUtf8 handle str
+
+      writeUtf8 :: Handle -> String -> IO ()
+      writeUtf8 handle str = hSetEncoding handle utf8 >> hPutStr handle str
 
 unlit :: FilePath -> Selector -> String -> String
 unlit fileName selector = unlines . concatMap formatCB . filter (toP selector . codeBlockClasses) . parse
