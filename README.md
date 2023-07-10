@@ -89,6 +89,51 @@ Run it like so:
 
     $ cabal configure --enable-tests && cabal build && cabal test
 
+## Reordering code blocks
+
+Code blocks that are tagged with `top` are moved to the beginning of the source
+file.
+
+**Example:**
+
+    ## Introduction
+
+    ```haskell top
+    {-# LANGUAGE OverloadedStrings #-}
+    module MyModule where
+    ```
+
+    ## Working with textual data
+
+    ```haskell top
+    import qualified Data.Text as Text
+    ```
+    ```haskell
+    -- |
+    -- >>> foo
+    -- 3
+    foo :: Int
+    foo = Text.length "foo"
+    ```
+
+    ## Working with binary data
+
+    ```haskell top
+    import qualified Data.ByteString as ByteString
+    ```
+    ```haskell
+    -- |
+    -- >>> bar
+    -- 3
+    bar :: Int
+    bar = ByteString.length "foo"
+    ```
+
+~~~
+$ doctest -pgmL markdown-unlit MyModule.lhs
+Examples: 2  Tried: 2  Errors: 0  Failures: 0
+~~~
+
 ## Customizing
 
 By default, `markdown-unlit` extracts all code that is marked with `haskell`,
