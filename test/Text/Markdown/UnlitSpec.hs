@@ -29,7 +29,7 @@ spec = do
     it "prints a usage message" $ do
       withProgName "foo" $ do
         (r, Left (ExitFailure 1)) <- hCapture [stderr] (try $ run [])
-        r `shouldBe` "usage: foo [selector] -h label infile outfile\n"
+        r `shouldBe` "usage: foo [selector] -h SRC CUR DST\n"
 
     it "unlits code marked with .haskell by default (unless it is marked with .ignore as well)" $ do
       withTempFile $ \infile -> withTempFile $ \outfile -> do
