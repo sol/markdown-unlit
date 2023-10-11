@@ -7,3 +7,5 @@ package markdown-unlit
 
 package nifty-library
   ghc-options: -Werror
+
+tests: True
