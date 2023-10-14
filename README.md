@@ -134,6 +134,13 @@ $ doctest -pgmL markdown-unlit MyModule.lhs
 Examples: 2  Tried: 2  Errors: 0  Failures: 0
 ~~~
 
+
+### More fine-grained control over the ordering
+
+Optionally, `top` can be followed by `:n` where `n` is a non-negative integer.
+Code blocks with a smaller `n` move above code blocks with a larger `n`.
+`top` is an alias for `top:0`.
+
 ## Customizing
 
 By default, `markdown-unlit` extracts all code that is marked with `haskell`,
