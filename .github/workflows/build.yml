@@ -28,11 +28,13 @@ jobs:
           - '9.2'
           - '9.4'
           - '9.6'
+          - '9.8'
+          - '9.10'
         include:
-          - os: macos-latest
-            ghc: latest
+          - os: macos-12
+            ghc: system
           - os: windows-latest
-            ghc: latest
+            ghc: system
     steps:
       - uses: actions/checkout@v3
       - uses: hspec/setup-haskell@v1
