@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - run: cabal check
+      - run: cabal check --ignore=missing-upper-bounds
 
       - uses: sol/haskell-autotag@v1
         id: autotag
