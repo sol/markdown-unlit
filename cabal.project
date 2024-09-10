@@ -2,10 +2,7 @@ packages:
   markdown-unlit.cabal
   example
 
-package markdown-unlit
-  ghc-options: -Werror
-
-package nifty-library
+program-options
   ghc-options: -Werror
 
 tests: True
