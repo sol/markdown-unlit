@@ -188,8 +188,8 @@ modifications.
 
 ## Real world examples
 
- * [ClickHaskell](https://github.com/KovalevDima/ClickHaskell) documentation
- * [servant](https://github.com/haskell-servant/servant/tree/master/doc) documentation generation
+ * [ClickHaskell](https://github.com/KovalevDima/ClickHaskell/tree/master/QA)
+ * [servant](https://github.com/haskell-servant/servant/tree/master/doc)
  * [attoparsec-parsec](https://github.com/sol/attoparsec-parsec#readme)
  * [hspec-expectations](https://github.com/sol/hspec-expectations#readme)
  * [wai](https://github.com/yesodweb/wai/tree/master/wai#readme)
