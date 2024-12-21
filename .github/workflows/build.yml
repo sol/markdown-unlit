@@ -30,8 +30,9 @@ jobs:
           - '9.6'
           - '9.8'
           - '9.10'
+          - '9.12'
         include:
-          - os: macos-12
+          - os: macos-latest
             ghc: system
           - os: windows-latest
             ghc: system
