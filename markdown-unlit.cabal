@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.2.
+-- This file has been generated from package.yaml by hpack version 0.38.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -12,7 +12,7 @@ homepage:         https://github.com/sol/markdown-unlit#readme
 bug-reports:      https://github.com/sol/markdown-unlit/issues
 license:          MIT
 license-file:     LICENSE
-copyright:        (c) 2012-2023 Simon Hengel
+copyright:        (c) 2012-2025 Simon Hengel
 author:           Simon Hengel <sol@typeful.net>
 maintainer:       Simon Hengel <sol@typeful.net>
 build-type:       Simple
