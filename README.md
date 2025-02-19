@@ -191,5 +191,10 @@ modifications.
  * [attoparsec-parsec](https://github.com/sol/attoparsec-parsec#readme)
  * [hspec-expectations](https://github.com/sol/hspec-expectations#readme)
  * [wai](https://github.com/yesodweb/wai/tree/master/wai#readme)
+ * [servant-tutorial](https://github.com/haskell-servant/servant/tree/master/doc/tutorial)
+ * [servant-cookbook](https://github.com/haskell-servant/servant/tree/master/doc/cookbook)
+ * [ClickHaskell-usage](https://github.com/KovalevDima/ClickHaskell/tree/master/usage)
+ * [ClickHaskell-contribution](https://github.com/KovalevDima/ClickHaskell/tree/master/contribution)
+ * [ClickHaskell-testing](https://github.com/KovalevDima/ClickHaskell/tree/master/testing)
 
 That's it, have fun!
