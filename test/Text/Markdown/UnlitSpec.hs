@@ -138,9 +138,14 @@ spec = do
         "~~~ {.bar}"
         "2"
         "~~~"
+        "~~~"
+        "3"
+        "~~~"
       `shouldBe` (build $ do
         "#line 5 \"Foo.lhs\""
         "2"
+        "#line 8 \"Foo.lhs\""
+        "3"
         )
 
     it "can handle :&:" $ do
