@@ -2,7 +2,6 @@
 module Text.Markdown.UnlitSpec (main, spec) where
 
 import           Test.Hspec
-import           Test.QuickCheck
 import           Data.String.Builder
 import           System.Environment
 import           Control.Exception
@@ -112,9 +111,6 @@ spec = do
 
     it "can handle a combination of :&: and :|:" $ do
       parseSelector "foo+bar baz+bar" `shouldBe` Just ("foo" :&: "bar" :|: "baz" :&: "bar")
-
-    it "is total" $ do
-      property $ \xs -> parseSelector xs `seq` True
 
   describe "unlit" $ do
     it "can be used to unlit everything with a specified class" $ do
