@@ -49,7 +49,7 @@ run args =
   -- #line 1 "label"
   --
   case break (== "-h") args of
-    (mkSelector -> selector, "-h" : files) -> case files of
+    ((mkSelector -> selector), "-h" : files) -> case files of
       [src, cur, dst] -> do
         readFileUtf8 cur >>= writeFileUtf8 dst . unlit src selector
       [src] -> do
