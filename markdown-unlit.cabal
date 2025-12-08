@@ -28,7 +28,6 @@ library
   ghc-options: -Wall
   build-depends:
       base ==4.*
-    , base-compat
   exposed-modules:
       Text.Markdown.Unlit
   other-modules:
