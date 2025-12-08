@@ -57,10 +57,9 @@ test-suite spec
   build-tool-depends:
       hspec-discover:hspec-discover
   build-depends:
-      QuickCheck
-    , base ==4.*
+      base ==4.*
     , directory
-    , hspec ==2.*
+    , nanospec
     , silently
     , stringbuilder
     , temporary
