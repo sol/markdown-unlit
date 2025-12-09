@@ -1,1 +1,7 @@
-{-# OPTIONS_GHC -F -pgmF hspec-discover #-}
+module Main where
+
+import Test.Hspec
+import Text.Markdown.UnlitSpec
+
+main :: IO ()
+main = hspec Text.Markdown.UnlitSpec.spec
