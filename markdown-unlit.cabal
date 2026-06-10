@@ -28,7 +28,6 @@ library
   ghc-options: -Wall
   build-depends:
       base ==4.*
-    , base-compat
   exposed-modules:
       Text.Markdown.Unlit
   other-modules:
@@ -44,27 +43,20 @@ executable markdown-unlit
   ghc-options: -Wall
   build-depends:
       base ==4.*
-    , base-compat
     , markdown-unlit
   default-language: Haskell2010
 
-test-suite spec
-  type: exitcode-stdio-1.0
+executable spec
   main-is: Spec.hs
   hs-source-dirs:
       test
       src
   ghc-options: -Wall
   cpp-options: -DTEST
-  build-tool-depends:
-      hspec-discover:hspec-discover
   build-depends:
-      QuickCheck
-    , base ==4.*
-    , base-compat
+      base ==4.*
     , directory
-    , hspec ==2.*
-    , silently
+    , nanospec
     , stringbuilder
     , temporary
   other-modules:

@@ -18,10 +18,10 @@ module Text.Markdown.Unlit (
 ) where
 
 import           Prelude ()
-import           Prelude.Compat
+import           Prelude
 import           Control.Arrow
 import           Data.Char
-import           Data.List.Compat
+import           Data.List
 import           Data.Maybe
 import           Data.String
 import           System.Environment
@@ -49,7 +49,7 @@ run args =
   -- #line 1 "label"
   --
   case break (== "-h") args of
-    (mkSelector -> selector, "-h" : files) -> case files of
+    ((mkSelector -> selector), "-h" : files) -> case files of
       [src, cur, dst] -> do
         readFileUtf8 cur >>= writeFileUtf8 dst . unlit src selector
       [src] -> do
